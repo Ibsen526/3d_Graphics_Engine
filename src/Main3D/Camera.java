@@ -31,14 +31,12 @@ public class Camera {
 	public Vec3 getCamFront() { return camFront; }
 	private Vec3 worldUp;
 		
-	KeyListener key;
-	MouseMotionListener mouseMotion;
+	private KeyListener key;
+	private MouseMotionListener mouseMotion;
 	
 	public Camera(float xDisp, float yDisp, float zDisp, Panel panel, int P_W, int P_H) {
 
 		view = new Mat4();
-		proj = new Mat4();
-		
 		proj = Math3D.Perspective(90.0f, 16.0f / 9.0f, 0.01f, 10.0f);
 		
 		moveSpeed = 0.1f;
@@ -68,11 +66,15 @@ public class Camera {
 					camPos = Vec3.Sub(camPos, Vec3.Mul(moveSpeed, Math3D.Normalize(Math3D.Cross(camFront, worldUp))));
 					panel.repaint();
 				}
+				if(e.getKeyCode() == KeyEvent.VK_SPACE) {
+					camPos = Vec3.Add(camPos, Vec3.Mul(moveSpeed, worldUp));
+				}
+				if(e.getKeyCode() == KeyEvent.VK_SHIFT) {
+					camPos = Vec3.Sub(camPos, Vec3.Mul(moveSpeed, worldUp));
+				}
 				if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
 					panel.removeMouseMotionListener(mouseMotion);
-				}
-				//System.out.println(camPos.x+" "+camPos.y+" "+camPos.z);
-				
+				}				
 			}
 
 			public void keyTyped(KeyEvent e) {}
@@ -87,11 +89,8 @@ public class Camera {
 				int my = e.getY();
 				
 				float normX = ((float)mx - (float)P_W / 2.0f) / (float)P_W * 2.0f;
-				//float normY = (((float)P_H / 2.0f - (float)my) / (float)P_H * 2.0f);
 				float normY = (((float)my - (float)P_H / 2.0f) / (float)P_H * 2.0f);
 						
-				//System.out.println("mouse pos "+panel.getLocationOnScreen().x+" "+panel.getLocationOnScreen().y);
-
 				yaw += normX * sensitivity;
 				pitch += normY * sensitivity;
 				
@@ -109,9 +108,8 @@ public class Camera {
 				camDirection.z = (float) Math.sin((radYaw)) * (float) Math.cos(radPitch);
 
 				camFront = Math3D.Normalize(camDirection);
-				//System.out.println(Vec3.Add(camPos, camFront).x+" "+Vec3.Add(camPos, camFront).y+" "+Vec3.Add(camPos, camFront).z);
 				
-				//Center the mouse cursor (java is stupid, cos i dont see sharp! haaaa!)
+				//Center the mouse cursor (java is stupid)
 				Robot r;
 				try {
 					r = new Robot();
@@ -130,10 +128,6 @@ public class Camera {
 		panel.addKeyListener(key);
 		panel.addMouseMotionListener(mouseMotion);
 	}
-	
-	public void MoveCam(float tx, float ty, float tz) {
-		camPos = Vec3.Add(camPos, new Vec3(tx, ty, tz));
-	}	
 	
 	public void ViewMatrix() {
 		view = Math3D.LookAt(camPos, Vec3.Add(camPos, camFront), worldUp);		

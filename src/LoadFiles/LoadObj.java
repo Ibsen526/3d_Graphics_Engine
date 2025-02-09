@@ -4,10 +4,11 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import Main3D.Mesh;
 import Util.Vec3;
 
 public class LoadObj {
-	public static LoadObjReturn File(String path) {
+	public static void File(String path, Mesh mesh) {
 		
 		File file;
 		Scanner scanner;
@@ -20,7 +21,7 @@ public class LoadObj {
 		}
 		catch(Exception ex) {
 			System.out.println(ex);
-			return new LoadObjReturn();
+			return;
 		}
 		
 		while (scanner.hasNextLine()) {
@@ -51,9 +52,6 @@ public class LoadObj {
 		
 		scanner.close();
 
-		ArrayList<Vec3> vertices = new ArrayList<Vec3>();
-		ArrayList<Integer> indices = new ArrayList<Integer>();
-		
 		//Now store the vertices and normals accordingly
 		Integer ti = 0; //counts only the original faces (the size of vertices)
 		ArrayList<Vec2I> tF = new ArrayList<Vec2I>(); //stores all the faces only once
@@ -65,24 +63,19 @@ public class LoadObj {
 				if (i.get(j).x == tF.get(k).x && i.get(j).y == tF.get(k).y) //checks if the current face is already stored
 				{
 					isIn = true;
-					indices.add(k);
+					mesh.Indices.add(k);
 					break;
 				}
 			}
 
 			if (!isIn)
 			{
-				vertices.add(v.get(i.get(j).x));
+				mesh.Vertices.add(v.get(i.get(j).x));
 				tF.add(i.get(j));
-				indices.add(ti);
+				mesh.Indices.add(ti);
 				ti++;
 			}
-			
-			/*vertices.add(new Vertex(v.get(i.get(j).x), vn.get(i.get(j).y)));
-			indices.add(j);*/
 		}
-		
-		return new LoadObjReturn(vertices, indices);		
 	}
 	
 	private static Vec2I StoreIndices(String x)
@@ -96,6 +89,4 @@ public class LoadObj {
 				
 		return new Vec2I(iv, ivn);
 	}
-	
-	
 }

@@ -16,15 +16,8 @@ public class Light {
 		intensity = i;
 	}
 	
-	public float CalcLight(Vec3 worldPos, Vec3 camPos) {
-		
-		
-		return 0;		
-	}
-	
 	public void MoveLightPos(Vec3 p) {
 		pos = Vec3.Add(pos, p);
-        System.out.println(pos.x+" "+pos.y+" "+pos.z);
 	}
 	
 	public Color LightDistanceToColor(Color baseColor, float cosTheta, float distLV) {

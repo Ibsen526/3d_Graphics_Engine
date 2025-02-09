@@ -46,15 +46,14 @@ public class Panel extends JPanel {
 	Light light;
 	
 	Panel (int PW, int PH) {
-		//Panel = new JPanel(new GridLayout(1,7));
 		this.setPreferredSize(new Dimension(PW, PH));
-		P_W = PW; P_H = PH;
+		P_W = PW;
+		P_H = PH;
 		this.setDoubleBuffered(true);
-		//this.setBounds(0, 0, PW, PH);
 
 		cam = new Camera(3.0f, 0.0f, 4.0f, this, P_W, P_H);
-		cube = new Mesh("C:\\Users\\Marti\\Desktop\\Ranzig\\Programme_nichtSchule\\Java_Projekte\\3D_Graphics_API\\assets\\cube3.obj");
-		ape = new Mesh("C:\\Users\\Marti\\Desktop\\Ranzig\\Programme_nichtSchule\\Java_Projekte\\3D_Graphics_API\\assets\\ape.obj");
+		cube = new Mesh(".\\assets\\cube3.obj");
+		ape = new Mesh(".\\assets\\ape.obj");
 		light = new Light(new Vec3(-1.0f, 0.0f, 1.0f), new Vec3(0.0f, 0.0f, -1.0f), 1.1f);
 
 		
@@ -97,10 +96,8 @@ public class Panel extends JPanel {
 		
 		ArrayList<Triangle> trianglesToRaster = new ArrayList<Triangle>();
 		
-		trianglesToRaster.addAll(cube.DrawMesh(g2D, cubeMat, P_W, P_H, cam, true, light, new Color(255, 100, 0)));
-		trianglesToRaster.addAll(ape.DrawMesh(g2D, apeMat, P_W, P_H, cam, true, light, new Color(0, 255, 100)));
-
-		//System.out.println(cam.getCamPos().x+" "+cam.getCamPos().y+" "+cam.getCamPos().z);
+		trianglesToRaster.addAll(cube.DrawMesh(cubeMat, P_W, P_H, cam, true, light, new Color(255, 100, 0)));
+		trianglesToRaster.addAll(ape.DrawMesh(apeMat, P_W, P_H, cam, true, light, new Color(0, 255, 100)));
 
 		//Now sort the triangles (only a hack, because depth buffer would be better)
 		ArrayList<Triangle> sortedTriangles = SortTriangles(trianglesToRaster);
